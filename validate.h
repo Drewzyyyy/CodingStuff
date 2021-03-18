@@ -1,4 +1,9 @@
 #pragma once
+/* Created by: Andrew Louis Hermo
+   Project name: Programming Exercise 1
+   Subject: CMSC 124-H
+   Affiliation: University of the Philippines Mindanao
+*/
 #include <string>
 
 bool checkExp(std::string exp);				// Checks if expression is viable for evaluation
