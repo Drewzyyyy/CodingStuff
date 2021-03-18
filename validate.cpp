@@ -1,3 +1,8 @@
+/* Created by: Andrew Louis Hermo
+   Project name: Programming Exercise 1
+   Subject: CMSC 124-H
+   Affiliation: University of the Philippines Mindanao
+*/
 #include "validate.h"
 #include <ctype.h>
 #include <string>
