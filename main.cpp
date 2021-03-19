@@ -1,4 +1,4 @@
-/* Created by: Andrew Louis Hermo
+/* Created by: Andrew Louis Hermo and April Rose Malugao
    Project name: Programming Exercise 1
    Subject: CMSC 124-H
    Affiliation: University of the Philippines Mindanao
@@ -42,12 +42,16 @@ void Display() {											// Displays the main menu
 }
 
 void ProgDesc(){											// Displays the Program Description
-	cout<<"Developer: Andrew Louis R. Hermo - 2019-01621"<<endl;
-	cout<<"Project started: March 17, 2021\tProject finished: March 18, 2021"<<endl;
-	cout<<"[E] Evaluates the arithemetic expressions inputted by the user, and outputs the answer"<<endl;
+	cout<<"\nDeveloper 1: Andrew Louis Hermo - 2019-01621"<<endl;
+	cout<<"Developer 2: April Rose Malugao - 2019-01621"<<endl;
+	cout<<"\nProject started: March 17, 2021\tProject finished: March 19, 2021"<<endl;
+	cout<<"\n[E] Evaluates the arithemetic expressions inputted by the user, and outputs the answer"<<endl;
 	cout<<"[X] Exits the program"<<endl;
-	cout<<"Sole Programmer: Andrew Louis R. Hermo"<<endl;
-	cout<<"LinkedIn: https://www.linkedin.com/in/alrhermo/"<<endl;
+	cout<<"\nAndrew Louis R. Hermo :"<<endl;
+	cout<<"\tEvaluation of Postfix, Error Checking and Display Function"<<endl;
+	cout<<"\nApril Rose Malugao :"<<endl;
+	cout<<"\tMain Menu, Program Descripntion, and Postfix Convertion"<<endl;
+	cout<<"\nLinkedIn: https://www.linkedin.com/in/alrhermo/"<<endl;
 }
 
 void Eval(char c){											// Evaluates the expression inputted by the user and outputs the answer

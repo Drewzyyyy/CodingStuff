@@ -1,8 +1,3 @@
-/* Created by: Andrew Louis Hermo
-   Project name: Programming Exercise 1
-   Subject: CMSC 124-H
-   Affiliation: University of the Philippines Mindanao
-*/
 #include "validate.h"
 #include <ctype.h>
 #include <string>
@@ -32,15 +27,19 @@ bool checkExp(string exp){	// Checks if expression is viable for evaluation
 	
 	int parenthesis_count = 0;						// Counts the number of parenthesis in the epxression
 	int operator_count = 0;							// Counts the number of operators in the expression
+	int num_count = 0;
 
 	for(int i = 0; i<exp.length();i++){				// Loops the entire string of operators
 	
 		if(isdigit(exp[i])){						// Checks if the character is a digit then continues to the next index
+			num_count++;
 			operator_count=0;						// Resets the operator count to 0
 			if(exp[i+1]=='(') exp.insert(i+1,"*");
 			continue;
 		}
-		else if(exp[i]==' ') continue;	// If the characrer is a space then continues to the next index
+		else if(exp[i]==' '){ 						// If the characrer is a space then continues to the next index
+			continue;
+		}				
 
 		if(exp[i]=='+') operator_count++;			// If it is a addition operator increment the operator count
 		else if(exp[i]=='-'){						// If it is a subtraction operator increment the operator count
@@ -59,13 +58,25 @@ bool checkExp(string exp){	// Checks if expression is viable for evaluation
 		if(operator_count>1) return false;			// If the operator count is more than 1, meaning there is an operator succeeding an operator, then the expression is invalid
 	}
 	if(parenthesis_count>0) return false;			// If the parenthesis count is not equal to 0, then it is invalid
+	if(operator_count!=0) return false;				// If the operators are not set to 0, meaning the last character was not a closing parenthesis or a number, then it is invalid
+	if(num_count==0) return false;					// If there are no numbers then it is invalid
 	return true;									// Else it is a valid expression
 }
 
 string ExpAdjust(std::string exp){					// Adjust the expression in case there are special cases
 	for(int i = 0;i<exp.length();i++){				// Loops the entire string
-		if(isdigit(exp[i]) && exp[i+1]=='(') exp.insert(i+1,"*");		// If the current character is a digit then the next character is an opening parenthesis, add a * character
-		else if(isdigit(exp[i+1] && exp[i]==')')) exp.insert(i+1,"*");	// If the current character is an closing parenthesis then the next character is a digit, add a * character
+		if(isdigit(exp[i]) && exp[i+1]=='(') exp = exp.insert(i+1,"*");		// If the current character is a digit then the next character is an opening parenthesis, add a * character
+		else if(exp[i]==')' && isdigit(exp[i+1])) exp = exp.insert(i+1,"*");	// If the current character is an closing parenthesis then the next character is a digit, add a * character
+		else if(exp[i]==')' && exp[i+1]=='(') exp = exp.insert(i+1,"*");	// If the current character isa closing parenthesis and the next character is an opening parenthesis, add a * character
+		
+		if(!isdigit(exp[i]) && exp[i+1] != ' '){	// If the current character is not a digit, and the next character does not have space, add a space
+			exp = exp.insert(i+1," ");				// Adds the space
+			i++;									// Moves the counter to the next number as to stop an infinite loop
+		}
+		else if(isdigit(exp[i]) && !isdigit(exp[i+1])){	// If the current chartacter is a digit, and the next character is not a digit, add a space
+			exp.insert(i+1," ");						// Adds the space
+			i++;										// Moves the counter to the next number as to stop an infinite loop
+		}
 	}
 	return exp;
 }
@@ -91,18 +102,15 @@ string toPostfix(std::string exp){ 					// Converts the infix expression to post
 	stack<char> s;									// Initiate a stack for the operators
 	string final = "";								// Storage for the final postfix expression
 	for(int i = 0;i<exp.length();i++){				// Loops to check the entire string
-//		cout<<"\nCharacter: "<<exp[i]<<endl;
 		if(exp[i]==' ') continue;					// If it is a space then move to the next character
 		if(isdigit(exp[i])){						// If it is a digit immediately add to the final postfix
 			final += (exp[i]);
-			final+=" ";
+			if(!isdigit(exp[i+1])) final+=" ";
 		}
 		else if(getPrecedence(exp[i])!=0){			// If the precedence is not 0, meaning it is a parenthesis and operator, then enter the nested else if statement
 			if(exp[i]=='(') s.push(exp[i]);			// If it is an opening parenthesis immediately add to the stack
 			else if (exp[i]==')'){					// If it is a closing parenthesis then clear the stack
-//				cout<<"time to pop"<<endl;
 				while(s.top()!='('){				// Continues until the stack is empty, th
-//					cout<<"pop top: "<<s.top()<<endl;
 					if(s.top()!='('){				// Checks if the top of the stack is not an opening parenthesis, if so add it to the final postfix 
 						final+=s.top();				// Adds the character at the top of the srack to the final postfix string
 						final+=" ";					// Adds a space for readability
@@ -127,12 +135,6 @@ string toPostfix(std::string exp){ 					// Converts the infix expression to post
 				s.push(exp[i]);						// Push the current infix character to the stack
 			}
 		}
-//		cout<<"Current final: "<<final<<endl;
-//		cout<<"Stack: ";
-//		while(!s.empty()){							
-//			cout<<s.top()<<endl;
-//			break;
-//		}
 	}
 	while(!s.empty()){								// If the stack is still not empty, pop out all operators
 		if(s.top()!='('||s.top()!=')'){				// If the top of the stack is not a parenthesis, then add it to the final postfix string
@@ -167,9 +169,16 @@ void EvalPost(string exp){							// Evaluates the answer of the postfix expressi
 
 	stack<int> s;									// Creates a stack of integers
 	int a = 0, b = 0, c = 0;						// Storage for the values to be computed, a and b for the computing variable, and c for the result
+	string num = "";
 	for(int i = 0;i < exp.length();i++){			// Loops the entire string of characters
 		if(isdigit(exp[i])){						// If character is a digit, convert it to integer then push to the stack
-			a = exp[i] - 48;						// Converts the character to integer. Subtracted by 48 to get the integer based on the ASCII table
+			for(int j = i;exp[j]!=' ';j++,i++){
+				cout<<"j = "<<exp[j]<<endl;
+				num+=exp[j];
+			}
+			cout<<"num = "<<num<<endl;
+			a = stoi(num);						// Converts the character to integer. Subtracted by 48 to get the integer based on the ASCII table
+			num = " ";
 			s.push(a);								// Push the integer to the stack
 		}
 		else if(exp[i]==' ') continue;				// If the character is a space, continue to the next index
