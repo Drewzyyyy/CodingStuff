@@ -1,0 +1,38 @@
+nav{
+    margin:87px;
+    font-size:20px;
+}
+a{
+    text-decoration: none;
+}
+img.logo{
+    width:76px;
+    height:92px;
+    padding:0px;
+    float:left;
+    display:block;
+    margin:0px 0px 25px 0px;
+}
+.logo{
+    margin:0px 150px 0px 0px;
+    font-family:Now;
+    line-height: 36px;
+    font-weight: bold;
+    color: #7D84B2;
+}
+.pages{
+    margin:50px;
+    font-family:Now;
+    font-style:normal;
+    font-weight:normal;
+    line-height: 39px;
+    color: black;
+}
+.first-block{
+    padding:100;
+    flex-wrap: wrap;
+}
+#img-1{
+    float:right;
+    border:0px;
+}
